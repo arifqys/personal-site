@@ -24,3 +24,9 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.container {
+  margin: auto;
+  max-width: 1024px;
+  padding: 40px 20px;
+}

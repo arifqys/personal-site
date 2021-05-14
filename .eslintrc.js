@@ -20,5 +20,6 @@ module.exports = {
   rules: {
     // No need to import React, because React 17 using JSX transform
     'react/react-in-jsx-scope': 'off',
+    'sort-imports': 'error',
   },
 };
