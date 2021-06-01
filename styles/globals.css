@@ -30,3 +30,7 @@ a {
   max-width: 1024px;
   padding: 40px 20px;
 }
+
+.rounded {
+  border-radius: 0.375rem;
+}
