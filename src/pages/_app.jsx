@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
-import '@styles/globals.css';
+import '@styles/globals.scss';
 import 'nprogress/nprogress.css';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import Head from 'next/head';
