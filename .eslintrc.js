@@ -3,10 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: [
-    'plugin:react/recommended',
-    'airbnb',
-  ],
+  extends: ['plugin:react/recommended', 'airbnb', 'prettier'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -14,13 +11,25 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: [
-    'react',
-  ],
+  plugins: ['react', 'prettier'],
   rules: {
     // No need to import React, because React 17 using JSX transform
     'react/react-in-jsx-scope': 'off',
-    'sort-imports': 'error',
     'no-underscore-dangle': 'off',
+    'sort-imports': 'error',
+    'react/jsx-sort-props': 'error',
+    'react/sort-prop-types': 'error',
+    'prettier/prettier': 'error',
+  },
+  settings: {
+    'import/resolver': {
+      alias: {
+        map: [
+          ['@components', './src/components'],
+          ['@lib', './src/lib'],
+          ['@styles', './src/styles'],
+        ],
+      },
+    },
   },
 };
