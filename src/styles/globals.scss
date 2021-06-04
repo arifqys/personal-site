@@ -34,3 +34,9 @@ a {
 .rounded {
   border-radius: 0.375rem;
 }
+
+.dast-content {
+  > * {
+    margin: 10px 0;
+  }
+}

@@ -15,6 +15,8 @@ module.exports = {
   rules: {
     // No need to import React, because React 17 using JSX transform
     'react/react-in-jsx-scope': 'off',
+    // To allow include empty a tag inside next/link
+    'jsx-a11y/anchor-is-valid': 'off',
     'no-underscore-dangle': 'off',
     'sort-imports': 'error',
     'react/jsx-sort-props': 'error',

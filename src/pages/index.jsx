@@ -27,7 +27,13 @@ const Home = ({ posts }) => (
       </Heading>
     </Box>
 
-    <Flex align="center" justify="space-between" mb="10" wrap="wrap">
+    <Flex
+      align="center"
+      as="section"
+      justify="space-between"
+      mb="10"
+      wrap="wrap"
+    >
       <Box>
         <Heading as="h3" mb="2" size="lg">
           Hi, welcome to my site 👋
@@ -72,7 +78,7 @@ const Home = ({ posts }) => (
       />
     </Flex>
 
-    <Box mb="10">
+    <Box as="section" mb="10">
       <Heading as="h2" mb="5" size="lg">
         Blog <Badge>in Bahasa</Badge>
       </Heading>
