@@ -1,10 +1,12 @@
 import { Box, Heading, Text } from '@chakra-ui/react';
+import { Image, StructuredText, renderRule } from 'react-datocms';
 import Head from 'next/head';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { StructuredText } from 'react-datocms';
+import SyntaxHighlighter from 'react-syntax-highlighter';
 import dayjs from '@lib/dayjs';
 import { gql } from '@apollo/client';
+import { isCode } from 'datocms-structured-text-utils';
 // eslint-disable-next-line sort-imports
 import client from '@lib/apollo-client';
 
@@ -34,7 +36,29 @@ const Post = ({ data }) => (
       </Text>
 
       <Box as="article" className="dast-content" mt={5}>
-        <StructuredText data={data.content} />
+        <StructuredText
+          customRules={[
+            renderRule(isCode, ({ node }) => (
+              <SyntaxHighlighter language={node.language} showLineNumbers>
+                {node.code}
+              </SyntaxHighlighter>
+            )),
+          ]}
+          data={data.content}
+          renderBlock={({ record }) => {
+            switch (record.__typename) {
+              case 'ImageRecord':
+                return (
+                  <Image
+                    className="rounded"
+                    data={record.image.responsiveImage}
+                  />
+                );
+              default:
+                return null;
+            }
+          }}
+        />
       </Box>
     </Box>
   </>
@@ -84,6 +108,26 @@ export const getStaticProps = async ({ params }) => {
         _createdAt
         content {
           value
+          blocks {
+            id
+            __typename
+            ... on ImageRecord {
+              image {
+                responsiveImage(imgixParams: { fit: fill, w: 500, h: 500, auto: format }) {
+                  srcSet
+                  webpSrcSet
+                  sizes
+                  src
+                  width
+                  height
+                  aspectRatio
+                  alt
+                  title
+                  base64
+                }
+              }
+            }
+          }
         }
       }
     }
