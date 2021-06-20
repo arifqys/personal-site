@@ -3,11 +3,13 @@ import {
   Box,
   Button,
   Flex,
+  HStack,
   Heading,
   LinkBox,
   LinkOverlay,
   SimpleGrid,
   Stack,
+  Tag,
   Text,
 } from '@chakra-ui/react';
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa';
@@ -80,10 +82,10 @@ const Home = ({ posts }) => (
 
     <Box as="section" mb="10">
       <Heading as="h2" mb="5" size="lg">
-        Blog <Badge>in Bahasa</Badge>
+        Blog <Badge>written in Bahasa</Badge>
       </Heading>
 
-      <SimpleGrid columns={[1, 2, 3]} spacing="20px">
+      <SimpleGrid columns={[1, 2]} spacing="20px">
         {posts.map((post) => (
           <LinkBox
             key={post.id}
@@ -105,11 +107,19 @@ const Home = ({ posts }) => (
             <Text
               as="time"
               color="gray.500"
-              dateTime={post._createdAt}
+              dateTime={post._firstPublishedAt}
               fontSize="xs"
             >
-              {dayjs(post._createdAt).fromNow()}
+              {dayjs(post._firstPublishedAt).fromNow()}
             </Text>
+
+            <HStack my="2" spacing={1}>
+              {post.tags?.map((tag) => (
+                <Tag key={tag} size="sm" variant="outline">
+                  {tag}
+                </Tag>
+              ))}
+            </HStack>
           </LinkBox>
         ))}
       </SimpleGrid>
@@ -118,18 +128,26 @@ const Home = ({ posts }) => (
 );
 
 Home.propTypes = {
-  posts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  posts: PropTypes.arrayOf(
+    PropTypes.shape({
+      _firstPublishedAt: PropTypes.string,
+      description: PropTypes.string,
+      tags: PropTypes.arrayOf(PropTypes.string),
+      title: PropTypes.string,
+    })
+  ).isRequired,
 };
 
 export const getStaticProps = async () => {
   const GET_BLOG_POSTS = gql`
     query GetBlogs {
-      allBlogs {
+      allBlogs(orderBy: _firstPublishedAt_DESC) {
         id
         slug
         title
         description
-        _createdAt
+        _firstPublishedAt
+        tags
       }
     }
   `;

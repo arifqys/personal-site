@@ -30,7 +30,7 @@ const MyApp = ({ Component, pageProps }) => (
         <Component {...pageProps} />
 
         <Box as="footer" my={10}>
-          &copy; {dayjs().year()}
+          &copy; {dayjs().year()} Ahmad Rifqy Syarwani
         </Box>
       </div>
     </ChakraProvider>

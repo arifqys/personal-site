@@ -1,4 +1,4 @@
-import { Box, Heading, Text } from '@chakra-ui/react';
+import { Box, HStack, Heading, Tag, Text } from '@chakra-ui/react';
 import { Image, StructuredText, renderRule } from 'react-datocms';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -31,9 +31,22 @@ const Post = ({ data }) => (
         {data.description}
       </Text>
 
-      <Text as="time" color="gray.500" dateTime={data._createdAt} fontSize="xs">
-        {dayjs(data._createdAt).format('dddd, DD MMMM YYYY')}
+      <Text
+        as="time"
+        color="gray.500"
+        dateTime={data._firstPublishedAt}
+        fontSize="xs"
+      >
+        {dayjs(data._firstPublishedAt).format('dddd, DD MMMM YYYY')}
       </Text>
+
+      <HStack my="2" spacing={1}>
+        {data.tags?.map((tag) => (
+          <Tag key={tag} size="sm" variant="outline">
+            {tag}
+          </Tag>
+        ))}
+      </HStack>
 
       <Box as="article" className="dast-content" mt={5}>
         <StructuredText
@@ -50,7 +63,7 @@ const Post = ({ data }) => (
               case 'ImageRecord':
                 return (
                   <Image
-                    className="rounded"
+                    className="dast-image rounded"
                     data={record.image.responsiveImage}
                   />
                 );
@@ -66,10 +79,10 @@ const Post = ({ data }) => (
 
 Post.propTypes = {
   data: PropTypes.shape({
-    _createdAt: PropTypes.string,
-    // eslint-disable-next-line react/forbid-prop-types
-    content: PropTypes.object,
+    _firstPublishedAt: PropTypes.string,
+    content: PropTypes.objectOf(PropTypes.any),
     description: PropTypes.string,
+    tags: PropTypes.arrayOf(PropTypes.string),
     title: PropTypes.string,
   }).isRequired,
 };
@@ -105,7 +118,8 @@ export const getStaticProps = async ({ params }) => {
       blog(filter: {slug: {eq: "${params.slug}"}}) {
         title
         description
-        _createdAt
+        _firstPublishedAt
+        tags
         content {
           value
           blocks {
