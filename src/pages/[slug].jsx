@@ -51,8 +51,12 @@ const Post = ({ data }) => (
       <Box as="article" className="dast-content" mt={5}>
         <StructuredText
           customRules={[
-            renderRule(isCode, ({ node }) => (
-              <SyntaxHighlighter language={node.language} showLineNumbers>
+            renderRule(isCode, ({ node, key }) => (
+              <SyntaxHighlighter
+                key={key}
+                language={node.language}
+                showLineNumbers
+              >
                 {node.code}
               </SyntaxHighlighter>
             )),
@@ -108,7 +112,7 @@ export const getStaticPaths = async () => {
 
   return {
     paths: pathsData,
-    fallback: false,
+    fallback: 'blocking',
   };
 };
 
@@ -155,6 +159,7 @@ export const getStaticProps = async ({ params }) => {
     props: {
       data: data.blog,
     },
+    revalidate: 900, // 15 minutes
   };
 };
 

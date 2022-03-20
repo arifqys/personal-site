@@ -160,6 +160,7 @@ export const getStaticProps = async () => {
     props: {
       posts: data.allBlogs,
     },
+    revalidate: 900, // 15 minutes
   };
 };
 
