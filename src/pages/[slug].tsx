@@ -1,16 +1,25 @@
 import { Box, HStack, Heading, Tag, Text } from '@chakra-ui/react';
+import { GetStaticPaths, GetStaticProps } from 'next';
 import { Image, StructuredText, renderRule } from 'react-datocms';
 import Head from 'next/head';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import dayjs from '@lib/dayjs';
+import dayjs from '@/lib/dayjs';
 import { gql } from '@apollo/client';
 import { isCode } from 'datocms-structured-text-utils';
-// eslint-disable-next-line sort-imports
-import client from '@lib/apollo-client';
+import client from '../lib/apollo-client';
 
-const Post = ({ data }) => (
+type PostProps = {
+  data: {
+    title: string;
+    description: string;
+    _firstPublishedAt: string;
+    tags: string[];
+    content: any;
+  };
+};
+
+const Post = ({ data }: PostProps): JSX.Element => (
   <>
     <Head>
       <title>{`${data.title} - Ahmad Rifqy Syarwani`}</title>
@@ -37,11 +46,11 @@ const Post = ({ data }) => (
         dateTime={data._firstPublishedAt}
         fontSize="xs"
       >
-        {dayjs(data._firstPublishedAt).format('dddd, DD MMMM YYYY')}
+        {dayjs(data._firstPublishedAt).format(`dddd, DD MMMM YYYY`)}
       </Text>
 
       <HStack my="2" spacing={1}>
-        {data.tags?.map((tag) => (
+        {data.tags.map((tag) => (
           <Tag key={tag} size="sm" variant="outline">
             {tag}
           </Tag>
@@ -64,10 +73,13 @@ const Post = ({ data }) => (
           data={data.content}
           renderBlock={({ record }) => {
             switch (record.__typename) {
-              case 'ImageRecord':
+              case `ImageRecord`:
                 return (
+                  // eslint-disable-next-line jsx-a11y/alt-text
                   <Image
                     className="dast-image rounded"
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
                     data={record.image.responsiveImage}
                   />
                 );
@@ -81,17 +93,7 @@ const Post = ({ data }) => (
   </>
 );
 
-Post.propTypes = {
-  data: PropTypes.shape({
-    _firstPublishedAt: PropTypes.string,
-    content: PropTypes.objectOf(PropTypes.any),
-    description: PropTypes.string,
-    tags: PropTypes.arrayOf(PropTypes.string),
-    title: PropTypes.string,
-  }).isRequired,
-};
-
-export const getStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const GET_ALL_SLUGS = gql`
     query GetSlugs {
       allBlogs {
@@ -104,7 +106,7 @@ export const getStaticPaths = async () => {
     query: GET_ALL_SLUGS,
   });
 
-  const pathsData = data.allBlogs.map((post) => ({
+  const pathsData = data.allBlogs.map((post: { slug: string }) => ({
     params: {
       slug: post.slug,
     },
@@ -112,14 +114,16 @@ export const getStaticPaths = async () => {
 
   return {
     paths: pathsData,
-    fallback: 'blocking',
+    fallback: `blocking`,
   };
 };
 
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async (context) => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const { slug } = context.params!;
   const GET_POST = gql`
     query GetPost {
-      blog(filter: {slug: {eq: "${params.slug}"}}) {
+      blog(filter: {slug: {eq: "${slug}"}}) {
         title
         description
         _firstPublishedAt
