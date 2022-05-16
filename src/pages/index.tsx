@@ -13,22 +13,26 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa';
+import { GetStaticProps } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
-import dayjs from '@lib/dayjs';
+import dayjs from '@/lib/dayjs';
 import { gql } from '@apollo/client';
-// eslint-disable-next-line sort-imports
-import client from '@lib/apollo-client';
+import client from '@/lib/apollo-client';
 
-const Home = ({ posts }) => (
+type HomeProps = {
+  posts: {
+    id: string;
+    slug: string;
+    title: string;
+    description: string;
+    _firstPublishedAt: string;
+    tags: string[];
+  }[];
+};
+
+const Home = ({ posts }: HomeProps): JSX.Element => (
   <>
-    <Box as="header" mb="20">
-      <Heading as="h1" size="2xl">
-        Ahmad Rifqy Syarwani
-      </Heading>
-    </Box>
-
     <Flex
       align="center"
       as="section"
@@ -36,6 +40,12 @@ const Home = ({ posts }) => (
       mb="10"
       wrap="wrap"
     >
+      <Box as="header" mb="20">
+        <Heading as="h1" size="2xl">
+          Ahmad Rifqy Syarwani
+        </Heading>
+      </Box>
+
       <Box>
         <Heading as="h3" mb="2" size="lg">
           Hi, welcome to my site 👋
@@ -114,7 +124,7 @@ const Home = ({ posts }) => (
             </Text>
 
             <HStack my="2" spacing={1}>
-              {post.tags?.map((tag) => (
+              {post.tags.map((tag) => (
                 <Tag key={tag} size="sm" variant="outline">
                   {tag}
                 </Tag>
@@ -127,18 +137,7 @@ const Home = ({ posts }) => (
   </>
 );
 
-Home.propTypes = {
-  posts: PropTypes.arrayOf(
-    PropTypes.shape({
-      _firstPublishedAt: PropTypes.string,
-      description: PropTypes.string,
-      tags: PropTypes.arrayOf(PropTypes.string),
-      title: PropTypes.string,
-    })
-  ).isRequired,
-};
-
-export const getStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const GET_BLOG_POSTS = gql`
     query GetBlogs {
       allBlogs(orderBy: _firstPublishedAt_DESC) {
