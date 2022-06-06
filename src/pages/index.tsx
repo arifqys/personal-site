@@ -11,11 +11,13 @@ import {
   Stack,
   Tag,
   Text,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa';
 import { GetStaticProps } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import NavHeader from '@/components/NavHeader';
 import dayjs from '@/lib/dayjs';
 import { gql } from '@apollo/client';
 import client from '@/lib/apollo-client';
@@ -31,111 +33,116 @@ type HomeProps = {
   }[];
 };
 
-const Home = ({ posts }: HomeProps): JSX.Element => (
-  <>
-    <Flex
-      align="center"
-      as="section"
-      justify="space-between"
-      mb="10"
-      wrap="wrap"
-    >
-      <Box as="header" mb="20">
-        <Heading as="h1" size="2xl">
-          Ahmad Rifqy Syarwani
-        </Heading>
-      </Box>
+const Home = ({ posts }: HomeProps): JSX.Element => {
+  const descriptionColor = useColorModeValue(`gray.800`, `gray.300`);
 
-      <Box>
-        <Heading as="h3" mb="2" size="lg">
-          Hi, welcome to my site 👋
-        </Heading>
+  return (
+    <>
+      <NavHeader />
 
-        <Text fontSize="xl" mr="5">
-          I&apos;m a software engineer with specialty in frontend and
-          JavaScript.
-          <br />I do write blog posts as my personal notes and medium to share.
-        </Text>
+      <Flex
+        align="center"
+        as="section"
+        justify="space-between"
+        mb="10"
+        wrap="wrap"
+      >
+        <Box>
+          <Heading as="h3" mb="2" size="lg">
+            Hi, welcome to my site 👋
+          </Heading>
 
-        <Stack direction="row" my={5} spacing={2}>
-          <a
-            href="https://linkedin.com/in/arifqys"
-            rel="noreferrer"
-            target="_blank"
-          >
-            <Button
-              colorScheme="linkedin"
-              leftIcon={<FaLinkedinIn />}
-              size="sm"
+          <Text fontSize="xl" mr="5">
+            I&apos;m a software engineer with specialty in frontend and
+            JavaScript.
+            <br />I do write blog posts as my personal notes and medium to
+            share.
+          </Text>
+
+          <Stack direction="row" my={5} spacing={2}>
+            <a
+              href="https://linkedin.com/in/arifqys"
+              rel="noreferrer"
+              target="_blank"
             >
-              LinkedIn
-            </Button>
-          </a>
+              <Button
+                colorScheme="linkedin"
+                leftIcon={<FaLinkedinIn />}
+                size="sm"
+              >
+                LinkedIn
+              </Button>
+            </a>
 
-          <a href="https://github.com/arifqys" rel="noreferrer" target="_blank">
-            <Button colorScheme="gray" leftIcon={<FaGithub />} size="sm">
-              Github
-            </Button>
-          </a>
-        </Stack>
-      </Box>
-
-      <Image
-        alt="Picture of Ahmad Rifqy Syarwani"
-        className="rounded"
-        height={150}
-        layout="fixed"
-        src="/img/profile.webp"
-        width={150}
-      />
-    </Flex>
-
-    <Box as="section" mb="10">
-      <Heading as="h2" mb="5" size="lg">
-        Blog <Badge>written in Bahasa</Badge>
-      </Heading>
-
-      <SimpleGrid columns={[1, 2]} spacing="20px">
-        {posts.map((post) => (
-          <LinkBox
-            key={post.id}
-            as="article"
-            borderWidth="1px"
-            p="5"
-            rounded="md"
-          >
-            <Heading as="h3" mb="2" size="md">
-              <Link href={`/${post.slug}`} passHref>
-                <LinkOverlay>{post.title}</LinkOverlay>
-              </Link>
-            </Heading>
-
-            <Text color="gray.800" fontSize="sm">
-              {post.description}
-            </Text>
-
-            <Text
-              as="time"
-              color="gray.500"
-              dateTime={post._firstPublishedAt}
-              fontSize="xs"
+            <a
+              href="https://github.com/arifqys"
+              rel="noreferrer"
+              target="_blank"
             >
-              {dayjs(post._firstPublishedAt).fromNow()}
-            </Text>
+              <Button colorScheme="gray" leftIcon={<FaGithub />} size="sm">
+                Github
+              </Button>
+            </a>
+          </Stack>
+        </Box>
 
-            <HStack my="2" spacing={1}>
-              {post.tags.map((tag) => (
-                <Tag key={tag} size="sm" variant="outline">
-                  {tag}
-                </Tag>
-              ))}
-            </HStack>
-          </LinkBox>
-        ))}
-      </SimpleGrid>
-    </Box>
-  </>
-);
+        <Image
+          alt="Picture of Ahmad Rifqy Syarwani"
+          className="rounded"
+          height={150}
+          layout="fixed"
+          src="/img/profile.webp"
+          width={150}
+        />
+      </Flex>
+
+      <Box as="section" mb="10">
+        <Heading as="h2" mb="5" size="lg">
+          Blog <Badge>written in Bahasa</Badge>
+        </Heading>
+
+        <SimpleGrid columns={[1, 2]} spacing="20px">
+          {posts.map((post) => (
+            <LinkBox
+              key={post.id}
+              as="article"
+              borderWidth="1px"
+              p="5"
+              rounded="md"
+            >
+              <Heading as="h3" mb="2" size="md">
+                <Link href={`/${post.slug}`} passHref>
+                  <LinkOverlay>{post.title}</LinkOverlay>
+                </Link>
+              </Heading>
+
+              <Text color={descriptionColor} fontSize="sm">
+                {post.description}
+              </Text>
+
+              <Text
+                as="time"
+                color="gray.500"
+                dateTime={post._firstPublishedAt}
+                fontSize="xs"
+              >
+                {dayjs(post._firstPublishedAt).fromNow()}
+              </Text>
+
+              <HStack my="2" spacing={1}>
+                {post.tags.map((tag) => (
+                  <Tag key={tag} size="sm" variant="outline">
+                    {tag}
+                  </Tag>
+                ))}
+              </HStack>
+            </LinkBox>
+          ))}
+        </SimpleGrid>
+      </Box>
+    </>
+  );
+};
 
 export const getStaticProps: GetStaticProps = async () => {
   const GET_BLOG_POSTS = gql`
