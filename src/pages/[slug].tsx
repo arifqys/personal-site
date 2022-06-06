@@ -1,13 +1,26 @@
-import { Box, HStack, Heading, Tag, Text } from '@chakra-ui/react';
+import {
+  Box,
+  HStack,
+  Heading,
+  Tag,
+  Text,
+  useColorMode,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { Image, StructuredText, renderRule } from 'react-datocms';
 import Head from 'next/head';
 import Link from 'next/link';
+import NavHeader from '@/components/NavHeader';
 import SyntaxHighlighter from 'react-syntax-highlighter';
+import {
+  a11yDark,
+  a11yLight,
+} from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import dayjs from '@/lib/dayjs';
 import { gql } from '@apollo/client';
-import { isCode } from 'datocms-structured-text-utils';
-import client from '../lib/apollo-client';
+import { isBlockquote, isCode } from 'datocms-structured-text-utils';
+import client from '@/lib/apollo-client';
 
 type PostProps = {
   data: {
@@ -19,79 +32,87 @@ type PostProps = {
   };
 };
 
-const Post = ({ data }: PostProps): JSX.Element => (
-  <>
-    <Head>
-      <title>{`${data.title} - Ahmad Rifqy Syarwani`}</title>
+const Post = ({ data }: PostProps): JSX.Element => {
+  const { colorMode } = useColorMode();
+  const descriptionColor = useColorModeValue(`gray.800`, `gray.300`);
 
-      <meta content={data.description} name="description" />
-    </Head>
+  return (
+    <>
+      <Head>
+        <title>{`${data.title} - Ahmad Rifqy Syarwani`}</title>
 
-    <Link href="/">
-      <a>Back to Home</a>
-    </Link>
+        <meta content={data.description} name="description" />
+      </Head>
 
-    <Box as="section">
-      <Heading as="h1" my={1}>
-        {data.title}
-      </Heading>
+      <NavHeader />
 
-      <Text color="gray.800" fontSize="lg" my={1}>
-        {data.description}
-      </Text>
+      <Link href="/">
+        <a>Back to Home</a>
+      </Link>
 
-      <Text
-        as="time"
-        color="gray.500"
-        dateTime={data._firstPublishedAt}
-        fontSize="xs"
-      >
-        {dayjs(data._firstPublishedAt).format(`dddd, DD MMMM YYYY`)}
-      </Text>
+      <Box as="section">
+        <Heading as="h1" my={1}>
+          {data.title}
+        </Heading>
 
-      <HStack my="2" spacing={1}>
-        {data.tags.map((tag) => (
-          <Tag key={tag} size="sm" variant="outline">
-            {tag}
-          </Tag>
-        ))}
-      </HStack>
+        <Text color={descriptionColor} fontSize="lg" my={1}>
+          {data.description}
+        </Text>
 
-      <Box as="article" className="dast-content" mt={5}>
-        <StructuredText
-          customRules={[
-            renderRule(isCode, ({ node, key }) => (
-              <SyntaxHighlighter
-                key={key}
-                language={node.language}
-                showLineNumbers
-              >
-                {node.code}
-              </SyntaxHighlighter>
-            )),
-          ]}
-          data={data.content}
-          renderBlock={({ record }) => {
-            switch (record.__typename) {
-              case `ImageRecord`:
-                return (
-                  // eslint-disable-next-line jsx-a11y/alt-text
-                  <Image
-                    className="dast-image rounded"
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    data={record.image.responsiveImage}
-                  />
-                );
-              default:
-                return null;
-            }
-          }}
-        />
+        <Text
+          as="time"
+          color="gray.500"
+          dateTime={data._firstPublishedAt}
+          fontSize="xs"
+        >
+          {dayjs(data._firstPublishedAt).format(`dddd, DD MMMM YYYY`)}
+        </Text>
+
+        <HStack my="2" spacing={1}>
+          {data.tags.map((tag) => (
+            <Tag key={tag} size="sm" variant="outline">
+              {tag}
+            </Tag>
+          ))}
+        </HStack>
+
+        <Box as="article" className="dast-content" mt={5}>
+          <StructuredText
+            customRules={[
+              renderRule(isCode, ({ node, key }) => (
+                <SyntaxHighlighter
+                  key={key}
+                  language={node.language}
+                  showLineNumbers
+                  style={colorMode === `light` ? a11yLight : a11yDark}
+                >
+                  {node.code}
+                </SyntaxHighlighter>
+              )),
+            ]}
+            data={data.content}
+            renderBlock={({ record }) => {
+              switch (record.__typename) {
+                case `ImageRecord`:
+                  return (
+                    // eslint-disable-next-line jsx-a11y/alt-text
+                    <Image
+                      className="dast-image rounded"
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      // @ts-ignore
+                      data={record.image.responsiveImage}
+                    />
+                  );
+                default:
+                  return null;
+              }
+            }}
+          />
+        </Box>
       </Box>
-    </Box>
-  </>
-);
+    </>
+  );
+};
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const GET_ALL_SLUGS = gql`

@@ -6,6 +6,7 @@ import Head from 'next/head';
 import NProgress from 'nprogress';
 import Router from 'next/router';
 import dayjs from '@/lib/dayjs';
+import theme from '@/styles/theme';
 
 Router.events.on(`routeChangeStart`, () => NProgress.start());
 Router.events.on(`routeChangeComplete`, () => NProgress.done());
@@ -24,7 +25,7 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => (
       <link href="/favicon.ico" rel="icon" />
     </Head>
 
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <div className="container">
         <Component {...pageProps} />
 
