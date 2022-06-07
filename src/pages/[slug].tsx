@@ -19,7 +19,7 @@ import {
 } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import dayjs from '@/lib/dayjs';
 import { gql } from '@apollo/client';
-import { isBlockquote, isCode } from 'datocms-structured-text-utils';
+import { isCode } from 'datocms-structured-text-utils';
 import client from '@/lib/apollo-client';
 
 type PostProps = {
@@ -36,12 +36,18 @@ const Post = ({ data }: PostProps): JSX.Element => {
   const { colorMode } = useColorMode();
   const descriptionColor = useColorModeValue(`gray.800`, `gray.300`);
 
+  const ogImageUrl = encodeURI(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/og-image?title=${data.title}&subtitle=${data.description}`,
+  );
+
   return (
     <>
       <Head>
         <title>{`${data.title} - Ahmad Rifqy Syarwani`}</title>
 
         <meta content={data.description} name="description" />
+
+        <meta content={ogImageUrl} property="og:image" />
       </Head>
 
       <NavHeader />
