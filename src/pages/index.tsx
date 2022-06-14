@@ -60,29 +60,29 @@ const Home = ({ posts }: HomeProps): JSX.Element => {
           </Text>
 
           <Stack direction="row" my={5} spacing={2}>
-            <a
+            <Button
+              as="a"
               href="https://linkedin.com/in/arifqys"
               rel="noreferrer"
               target="_blank"
+              colorScheme="linkedin"
+              leftIcon={<FaLinkedinIn />}
+              size="sm"
             >
-              <Button
-                colorScheme="linkedin"
-                leftIcon={<FaLinkedinIn />}
-                size="sm"
-              >
-                LinkedIn
-              </Button>
-            </a>
+              LinkedIn
+            </Button>
 
-            <a
+            <Button
+              as="a"
               href="https://github.com/arifqys"
               rel="noreferrer"
               target="_blank"
+              colorScheme="gray"
+              leftIcon={<FaGithub />}
+              size="sm"
             >
-              <Button colorScheme="gray" leftIcon={<FaGithub />} size="sm">
-                Github
-              </Button>
-            </a>
+              Github
+            </Button>
           </Stack>
         </Box>
 

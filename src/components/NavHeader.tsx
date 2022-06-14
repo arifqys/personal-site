@@ -9,7 +9,7 @@ const NavHeader = (): JSX.Element => {
       <Heading as="h1" size="2xl">
         Ahmad Rifqy Syarwani
       </Heading>
-      <Button onClick={toggleColorMode}>
+      <Button aria-label="Toggle light or dark mode" onClick={toggleColorMode}>
         {colorMode === `light` ? <MdDarkMode /> : <MdLightMode />}
       </Button>
     </Flex>
