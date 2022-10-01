@@ -41,20 +41,24 @@ const Home = ({ posts }: HomeProps): JSX.Element => {
       <NavHeader />
 
       <Flex
-        align="center"
+        align="flex-start"
         as="section"
+        direction={[`column-reverse`, `row`]}
         justify="space-between"
         mb="10"
         wrap="wrap"
       >
-        <Box>
+        <Box flex="1" mt="5">
           <Heading as="h3" mb="2" size="lg">
             Hi, welcome to my site 👋
           </Heading>
 
           <Text fontSize="xl" mr="5">
-            I&apos;m a software engineer with specialty in frontend and
-            JavaScript.
+            I&apos;m an experienced software engineer that has strong knowledge
+            in Front-End.
+            <br /> Have developed several web apps & mobile apps with JavaScript
+            technology (React / React Native / Vue).
+            <br />
             <br />I do write blog posts as my personal notes and medium to
             share.
           </Text>
