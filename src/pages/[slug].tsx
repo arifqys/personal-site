@@ -1,12 +1,15 @@
 import {
   Box,
+  Button,
   HStack,
   Heading,
+  SimpleGrid,
   Tag,
   Text,
   useColorMode,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { FaChevronLeft, FaChevronRight, FaHome } from 'react-icons/fa';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { Image, StructuredText, renderRule } from 'react-datocms';
 import Head from 'next/head';
@@ -22,30 +25,78 @@ import { gql } from '@apollo/client';
 import { isCode } from 'datocms-structured-text-utils';
 import client from '@/lib/apollo-client';
 
+type NextPrevPost = {
+  title: string;
+  slug: string;
+} | null;
+
+type BottomPostNavigationProps = {
+  type: 'prev' | 'next' | 'home';
+  data?: NextPrevPost;
+};
+
+const BOTTOM_POST_NAVIGATION_ICON = {
+  prev: <FaChevronLeft />,
+  next: <FaChevronRight />,
+  home: <FaHome />,
+};
+
+const BOTTOM_POST_NAVIGATION_LABEL = {
+  prev: `Prev Post`,
+  next: `Next Post`,
+  home: `Home`,
+};
+
+const BottomPostNavigation = ({
+  type,
+  data,
+}: BottomPostNavigationProps): JSX.Element => {
+  const isHome = type === `home`;
+  const isNext = type === `next`;
+
+  if (!isHome && !data) {
+    return <Box />;
+  }
+
+  return (
+    <Link href={isHome || !data ? `/` : `/${data.slug}`}>
+      <Button>
+        {!isNext && BOTTOM_POST_NAVIGATION_ICON[type]}
+        <Text mx={1} noOfLines={1}>
+          {BOTTOM_POST_NAVIGATION_LABEL[type]}
+        </Text>
+        {isNext && BOTTOM_POST_NAVIGATION_ICON[type]}
+      </Button>
+    </Link>
+  );
+};
+
 type PostProps = {
-  data: {
+  post: {
     title: string;
     description: string;
     _firstPublishedAt: string;
     tags: string[];
     content: any;
   };
+  prevPost: NextPrevPost;
+  nextPost: NextPrevPost;
 };
 
-const Post = ({ data }: PostProps): JSX.Element => {
+const Post = ({ post, prevPost, nextPost }: PostProps): JSX.Element => {
   const { colorMode } = useColorMode();
   const descriptionColor = useColorModeValue(`gray.800`, `gray.300`);
 
   const ogImageUrl = encodeURI(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/og-image?title=${data.title}&subtitle=${data.description}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/og-image?title=${post.title}&subtitle=${post.description}`,
   );
 
   return (
     <>
       <Head>
-        <title>{`${data.title} - Ahmad Rifqy Syarwani`}</title>
+        <title>{`${post.title} - Ahmad Rifqy Syarwani`}</title>
 
-        <meta content={data.description} name="description" />
+        <meta content={post.description} name="description" />
 
         <meta content={ogImageUrl} property="og:image" />
       </Head>
@@ -58,24 +109,24 @@ const Post = ({ data }: PostProps): JSX.Element => {
 
       <Box as="section">
         <Heading as="h1" my={1}>
-          {data.title}
+          {post.title}
         </Heading>
 
         <Text color={descriptionColor} fontSize="lg" my={1}>
-          {data.description}
+          {post.description}
         </Text>
 
         <Text
           as="time"
           color="gray.500"
-          dateTime={data._firstPublishedAt}
+          dateTime={post._firstPublishedAt}
           fontSize="xs"
         >
-          {dayjs(data._firstPublishedAt).format(`dddd, DD MMMM YYYY`)}
+          {dayjs(post._firstPublishedAt).format(`dddd, DD MMMM YYYY`)}
         </Text>
 
         <HStack my="2" spacing={1}>
-          {data.tags.map((tag) => (
+          {post.tags.map((tag) => (
             <Tag key={tag} size="sm" variant="outline">
               {tag}
             </Tag>
@@ -96,7 +147,7 @@ const Post = ({ data }: PostProps): JSX.Element => {
                 </SyntaxHighlighter>
               )),
             ]}
-            data={data.content}
+            data={post.content}
             renderBlock={({ record }) => {
               switch (record.__typename) {
                 case `ImageRecord`:
@@ -116,6 +167,12 @@ const Post = ({ data }: PostProps): JSX.Element => {
           />
         </Box>
       </Box>
+
+      <SimpleGrid columns={[1, 3]} my={10} spacing={5}>
+        <BottomPostNavigation type="prev" data={prevPost} />
+        <BottomPostNavigation type="home" />
+        <BottomPostNavigation type="next" data={nextPost} />
+      </SimpleGrid>
     </>
   );
 };
@@ -179,6 +236,10 @@ export const getStaticProps: GetStaticProps = async (context) => {
           }
         }
       }
+      allBlogs(orderBy: _firstPublishedAt_ASC) {
+        title
+        slug
+      }
     }
   `;
 
@@ -186,9 +247,16 @@ export const getStaticProps: GetStaticProps = async (context) => {
     query: GET_POST,
   });
 
+  const { blog, allBlogs } = data;
+  const currentIndex = allBlogs.findIndex(
+    (blog: NextPrevPost) => blog?.slug === slug,
+  );
+
   return {
     props: {
-      data: data.blog,
+      post: blog,
+      nextPost: allBlogs[currentIndex + 1] || null,
+      prevPost: allBlogs[currentIndex - 1] || null,
     },
     revalidate: 900, // 15 minutes
   };

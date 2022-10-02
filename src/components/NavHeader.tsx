@@ -5,7 +5,7 @@ const NavHeader = (): JSX.Element => {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
-    <Flex align="center" as="header" justify="space-between" mb="10">
+    <Flex align="center" as="header" justify="space-between" mb={10}>
       <Heading as="h1" size="2xl">
         Ahmad Rifqy Syarwani
       </Heading>

@@ -45,15 +45,15 @@ const Home = ({ posts }: HomeProps): JSX.Element => {
         as="section"
         direction={[`column-reverse`, `row`]}
         justify="space-between"
-        mb="10"
+        mb={10}
         wrap="wrap"
       >
-        <Box flex="1" mt="5">
-          <Heading as="h3" mb="2" size="lg">
+        <Box flex="1" mt={5}>
+          <Heading as="h3" mb={2} size="lg">
             Hi, welcome to my site 👋
           </Heading>
 
-          <Text fontSize="xl" mr="5">
+          <Text fontSize="xl" mr={5}>
             I&apos;m an experienced software engineer that has strong knowledge
             in Front-End.
             <br /> Have developed several web apps & mobile apps with JavaScript
@@ -100,12 +100,12 @@ const Home = ({ posts }: HomeProps): JSX.Element => {
         />
       </Flex>
 
-      <Box as="section" mb="10">
-        <Heading as="h2" mb="5" size="lg">
+      <Box as="section" mb={10}>
+        <Heading as="h2" mb={5} size="lg">
           Blog <Badge>written in Bahasa</Badge>
         </Heading>
 
-        <SimpleGrid columns={[1, 2]} spacing="20px">
+        <SimpleGrid columns={[1, 2]} spacing={5}>
           {posts.map((post) => (
             <LinkBox
               key={post.id}
@@ -114,7 +114,7 @@ const Home = ({ posts }: HomeProps): JSX.Element => {
               p="5"
               rounded="md"
             >
-              <Heading as="h3" mb="2" size="md">
+              <Heading as="h3" mb={2} size="md">
                 <Link href={`/${post.slug}`} passHref>
                   <LinkOverlay>{post.title}</LinkOverlay>
                 </Link>
@@ -133,7 +133,7 @@ const Home = ({ posts }: HomeProps): JSX.Element => {
                 {dayjs(post._firstPublishedAt).fromNow()}
               </Text>
 
-              <HStack my="2" spacing={1}>
+              <HStack my={2} spacing={1}>
                 {post.tags.map((tag) => (
                   <Tag key={tag} size="sm" variant="outline">
                     {tag}
