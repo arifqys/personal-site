@@ -38,7 +38,7 @@ const Home = ({ posts }: HomeProps): JSX.Element => {
 
   return (
     <>
-      <NavHeader />
+      <NavHeader isHome />
 
       <Flex
         align="flex-start"

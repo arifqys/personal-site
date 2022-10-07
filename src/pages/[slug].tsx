@@ -101,11 +101,7 @@ const Post = ({ post, prevPost, nextPost }: PostProps): JSX.Element => {
         <meta content={ogImageUrl} property="og:image" />
       </Head>
 
-      <NavHeader />
-
-      <Link href="/">
-        <a>Back to Home</a>
-      </Link>
+      <NavHeader backLabel="Home" backUrl="/" />
 
       <Box as="section">
         <Heading as="h1" my={1}>
