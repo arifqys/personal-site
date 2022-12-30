@@ -11,11 +11,19 @@ export interface Props {
 		pubDate?: string;
 		updatedDate?: string;
 		heroImage?: string;
+		tags?: string[];
 	};
 }
 
 const {
-	content: { title, description, pubDate, updatedDate, heroImage },
+	content: {
+		title,
+		description,
+		pubDate,
+		updatedDate,
+		heroImage,
+		tags,
+	},
 } = Astro.props;
 ---
 
@@ -27,18 +35,31 @@ const {
 	<Body>
 		<Header />
 		<main>
-			<article>
-				{heroImage && <img width={720} height={360} src={heroImage} alt="" />}
-				<h1 class="title">{title}</h1>
-				{pubDate && <time>{pubDate}</time>}
+			<article class="flex flex-col gap-y-2">
+				{heroImage && (
+					<img
+						class="rounded-lg h-60 object-cover"
+						src={heroImage}
+						alt={title}
+					/>
+				)}
+				<h1 class="text-4xl font-bold">{title}</h1>
+				<p>{description}</p>
+				{pubDate && <time class="text-sm text-gray-500">{pubDate}</time>}
 				{
 					updatedDate && (
-						<div>
+						<div class="text-sm text-gray-500">
 							Last updated on <time>{updatedDate}</time>
 						</div>
 					)
 				}
-				<hr />
+				<div class="flex gap-1">
+					{
+						tags?.map(tag => (
+							<span class="text-xs font-bold py-1 px-2 rounded-md bg-gray-200 text-gray-600  dark:bg-gray-900 dark:text-gray-400">{tag}</span>
+						))
+					}
+				</div>
 				<slot />
 			</article>
 		</main>

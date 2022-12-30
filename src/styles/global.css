@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
 	font-family: 'Lato', sans-serif;
 	margin: auto;
@@ -12,5 +16,49 @@ body {
 	overflow-wrap: break-word;
 	line-height: 1.5;
 	color: #444;
+}
+
+article h1 {
+	@apply text-4xl font-bold mt-4;
+}
+
+article h2 {
+	@apply text-3xl font-bold mt-4;
+}
+
+article h3 {
+	@apply text-2xl font-bold mt-4;
+}
+
+article h4 {
+	@apply text-xl font-bold mt-4;
+}
+
+article h5 {
+	@apply text-lg font-bold mt-4;
+}
+
+article h6 {
+	@apply text-base font-bold mt-4;
+}
+
+article a {
+	@apply text-blue-800 hover:underline dark:text-blue-200;
+}
+
+article img {
+	@apply rounded-md my-2;
+}
+
+article blockquote {
+	@apply p-4 my-4 border-l-4 bg-gray-50 border-gray-300 dark:bg-gray-900 dark:border-gray-500;
+}
+
+article pre.astro-code {
+	@apply p-2 rounded-md;
+}
+
+article mark {
+	@apply px-1;
 }
 
