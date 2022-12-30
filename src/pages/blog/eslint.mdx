@@ -1,0 +1,131 @@
+---
+layout: "../../layouts/BlogPost.astro"
+title: "Kode Lebih Baik dengan ESLint"
+description: "Pengenalan dan panduan untuk memulai menggunakan ESLint."
+pubDate: "Jun 12 2021"
+heroImage: "/blog/eslint/hero.jpeg"
+tags: ["tools", "javascript"]
+---
+
+## ESLint
+ESLint merupakan alat berupa linter untuk JavaScript yang memaksa gaya penulisan kode yang konsisten, mengetahui *error* pada sintaks, dan terhindar dari *bug* yang sering terjadi dari pola yang tidak baik. *Rules* tersebut ditentukan secara kolektif oleh komunitas. Kita dapat menentukan *rules* apa saja yang ingin kita gunakan pada proyek kita, atau secara mudah kita dapat menggunakan template konfigurasi yang telah mendefinisikan berbagai *rules* tersebut melalui opsi *extends*, salah satu konfigurasi ESLint yang paling populer adalah konfigurasi [Airbnb](https://www.npmjs.com/package/eslint-config-airbnb).
+
+### Panduan Penggunaan
+*Prerequisite: Node.js*
+
+Pertama kita siapkan terlebih dulu folder proyek yang memiliki file `package.json`, apabila belum ada, Anda dapat melakuan perintah dibawah melalui perintah.
+```sh
+npm init -y
+```
+
+Lalu tambahkan ESLint sebagai *dev dependency* proyek dengan perintah:
+```sh
+npm install eslint --save-dev
+```
+
+Buat file konfigurasi ESLint, cara paling mudah yaitu dengan perintah:
+```sh
+npx eslint --init
+```
+
+Perintah tersebut akan menampilkan interactive command line yang berisikan pertanyaan yang dapat kita pilih untuk memberikan konfigurasi dasar berdasarkan kebutuhan proyek sekarang, jangan khawatir memilih pilihan yang salah karena Anda juga dapat mengubah konfigurasi tersebut nanti.
+
+Perintah diatas akan membuat file konfigurasi yaitu `.eslintrc` dengan ekstensi `.js` / `.json` / `.yml` tergantung dengan opsi yang dipilih. Di sini saya memilih menyimpan konfigurasi pada file *JavaScript Object Notation* sehingga memiliki ekstensi `.json`.
+
+Apapun jenis konfigurasi file yang dipilih, pada file tersebut akan memiliki opsi konfigurasi, yaitu: **env**, **extends**, **parserOptions**, **rules**.
+
+<mark>rules</mark>
+merupakan aturan yang akan menampilkan peringatan ketika kita menulis kode yang melanggar aturan tersebut. Anda dapat melihat contoh pada [https://eslint.org/docs/rules/](https://eslint.org/docs/rules/).
+
+<mark>extends</mark>
+merupakan konfigurasi yang berisikan paket *rules* yang ingin digunakan.
+
+#### Menambahkan Rule
+Untuk penggunaan ESLint yang efisien, seringkali kita hanya perlu mengextend beberapa konfigurasi dan apabila kebutuhan kita tidak terpenuhi dengan *rules* yang diextend, kita dapat dengan mudah menambahkan *rule*, seperti gambar dibawah:
+```json
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+  },
+  "extends": [
+    "airbnb-base",
+  ],
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module",
+  },
+  "rules": {
+    // atur rules di bawah sini
+    "sort-imports": "error", // menambahkan rule
+  },
+}
+```
+
+#### Menonaktifkan Rule
+Sebaliknya terkadang ketika kita mengextend konfigurasi yang berisi berbagai *rules*, ternyata terdapat *rule* yang tidak ingin digunakan. Secara mudah kita juga bisa menonaktifkan *rule* tersebut, seperti gambar dibawah:
+```json
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+  },
+  "extends": [
+    "airbnb-base",
+  ],
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module",
+  },
+  "rules": {
+    // atur rules di bawah sini
+    "sort-imports": "error", // menambahkan rule
+    "no-underscore-dangle": "off", // menonaktifkan rule
+  },
+}
+```
+
+ESLint dapat dijalankan dengan perintah:
+```sh
+npx eslint .
+```
+
+Perintah diatas akan menampilkan peringatan ketika kode yang kita tulis tidak sesuai dengan *rules* yang telah ditetapkan.
+
+### ESLint dengan Prettier
+Prettier merupakan *code formatter*, hampir sama dengan ESLint yang memastikan gaya penulisan kode yang konsisten. Prettier berfokus pada *styling* seperti indentasi, penggunaan titik koma, penulisan petik satu atau dua, dan lain-lain. Prettier tidak menangkap *error / potential bug* seperti ESLint. ESLint sendiri sebenarnya juga bisa digunakan sebagai *code formatter* akan tetapi *rules* terkait dengan *styling* ESLint tidak selengkap Prettier, membuat penggunaan ESLint dengan Prettier merupakan kombinasi yang cocok untuk saling melengkapi.
+
+Pada proyek yang telah ditambahkan ESLint, kamu bisa menambahkan Prettier dengan cara:
+
+Menambahkan Prettier sebagai *dev dependency*.
+```sh
+npm install prettier eslint-plugin-prettier eslint-config-prettier --save-dev
+```
+
+Melakukan integrasi Prettier pada file konfigurasi ESLint.
+```json
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+  },
+  "extends": [
+    "airbnb-base",
+    "prettier", // tambahkan ini
+  ],
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module",
+  },
+  "plugins": [
+    "prettier", // tambahkan ini
+  ],
+  "rules": {
+    "prettier/prettier": "error", // tambahkan ini
+  },
+}
+```
+
+### Integrasi ESLint di VS Code
+ESLint dapat dijalankan melalui terminal / command line. Namun apabila kamu menggunakan text editor VS Code kamu dapat menginstall plugin [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) dan [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) untuk otomatis menjalankan ESLint dan membaca file konfigurasi, pada setiap file kode maka akan muncul peringatan ketika kodemu melanggar *rules* disertai dengan opsi untuk memperbaikinya apabila *rules* tersebut dapat diperbaiki oleh ESLint.
+![ESLint di VS Code](/blog/eslint/eslint-vscode.png)

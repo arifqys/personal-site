@@ -1,0 +1,46 @@
+---
+layout: "../../layouts/BlogPost.astro"
+title: "Terminal Asik dengan Fig"
+description: "Menambahkan fungsi autocompletion pada terminal."
+pubDate: "Jan 29 2022"
+heroImage: "/blog/fig/hero.jpeg"
+tags: ["tools"]
+---
+
+Kebanyakan orang mengoperasikan dan memberikan instruksi kepada komputer mereka menggunakan antarmuka atau GUI.  Namun sebagai developer,  tentu tak jarang kita harus menulis perintah secara langsung (seperti untuk menginisasi proyek & menjalankan proyek) di terminal. Bagi orang yang awam tentu hal tersebut terkadang cukup mengintimidasi, karena artinya kita perlu menghafalkan beberapa perintah. Tak heran apabila solusi aplikasi GUI sebagai pengganti pengguna untuk menuliskan perintah di terminal cukup populer digunakan, seperti aplikasi [GitHub Dekstop](https://desktop.github.com/) untuk menjalankan perintah git.
+
+Menurut saya ada baiknya kita menginvestasikan waktu untuk menjalankan perintah di terminal, tentu pada awalnya akan terasa lebih lama dalam melakukan sesuatu. Namun dengan menuliskan perintah tersebut kita menjadi tahu lebih dalam yang dilakukan dan tentu akan lebih fleksibel untuk memberikan instruksi dengan yang kita inginkan. Karena perlu diingat bahwa aplikasi GUI pada akhirnya pun akan menjalankan perintah di terminal.
+
+Terlebih lagi kita dapat melakukan konfigurasi pada terminal / shell pada komputer kita sehingga menjadi lebih user friendly dan mudah digunakan. Seperti menambahkan fungsi auto completion menggunakan [Fig](https://fig.io/).
+
+> ***Catatan***: Untuk saat ini sayangnya Fig hanya bisa di-install pada komputer macOS. Namun tim Fig sendiri sudah memiliki rencana untuk membuatnya tersedia di sistem operasi lainnya untuk kedepannya.
+
+### Panduan Instalasi Fig (macOS)
+Untuk meng-install Fig cukup mudah. Anda bisa mengunduh secara langsung pada laman resmi [https://fig.io/](https://fig.io/) atau apabila komputer Anda telah memiliki Homebrew bisa menjalankan perintah berikut:
+```sh
+brew install --cask fig
+```
+Setalah berhasil mengunduh installer maka kita tinggal menjalankan aplikasi tersebut dan mengikuti langkah-langkah sampai akhir.
+
+### Autocompletion Fig
+Saat ini Fig mendukung autocompletion untuk berbagai perintah & CLI tools seperti git, npm, docker, kubernetes, ssh, aws, etc. Sebagai bayangan berikut beberapa contoh screenshoot penggunaan Fig.
+
+#### Navigasi folder & file
+Dengan mulai mengetikkan cd pada terminal, kita otomatis mendapatkan autocompletion mengenai folder dan file yang tersedia pada direktori saat ini. Sehingga kita tidak perlu mengetik perintah ls terlebih dahulu untuk mengetahui folder dan file yang tersedia.
+![Demo navigasi folder & file](/blog/fig/cd.gif)
+
+#### Menginisiasi proyek npx
+Dengan mulai mengetikkan npx pada terminal, kita otomatis mendapatkan command tools / executables eksternal yang berada di registry dan dapat kita jalankan. Sebagai contoh kita dapat mendapatkan autocompletion create-next-app untuk menginsiasi proyek Next.js.
+![Demo perintah npx](/blog/fig/npx.gif)
+
+#### Menggunakan git
+Dengan mulai mengetikkan git pada terminal, kita otomatis mendapatkan daftar perintah git yang tersedia. Selain itu kita juga mendapatkan deskripsi singkat mengenai perintah tersebut.
+![Demo perintah git](/blog/fig/git.gif)
+
+#### Menambahkan & menghapus dependensi proyek
+Dengan mulai mengetikkan perintah untuk menambah dependesi, kita otomatis mendapatkan daftar package yang tersedia di registry.
+![Demo perintah npm install](/blog/fig/npmi.gif)
+Lebih canggih lagi apabila kita ingin menghapus dependesi proyek, kita otomatis mendapatkan daftar package yang telah ditambahkan di proyek kita saja.
+![Demo perintah npm uninstall](/blog/fig/npmun.gif)
+
+Serta masih banyak lagi use case penggunaan autocompletion fig. Saat ini fig telah mendukung lebih dari <mark>100 CLI tools</mark>, kode autocompletion ini sering diperbarui & dibuka secara publik pada [GitHub](https://github.com/withfig/autocomplete/tree/master/src). Apabila Anda memiliki CLI tools buatan sendiri. Andapun bisa menambahkan spesifikasi sendiri untuk mendukung hal tersebut. Untuk panduan menuliskan spesifikasi completion sendiri yang dokumentasinya telah tersedia [di sini](https://fig.io/docs/getting-started/first-completion-spec).

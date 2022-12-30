@@ -3,11 +3,12 @@ import HeaderLink from './HeaderLink.astro';
 import ThemeToggle from './ThemeToggle.astro';
 ---
 
-<header class="mb-8 py-4 flex justify-between align-middle">
+<header class="mb-8 py-4 flex justify-between items-center">
 	<nav>
 		<HeaderLink href="/">Home</HeaderLink>
 		<HeaderLink href="/blog">Blog</HeaderLink>
-		<HeaderLink href="/about">About</HeaderLink>
+		<!-- TODO: Uncomment this when about page is ready -->
+		<!-- <HeaderLink href="/about">About</HeaderLink> -->
 	</nav>
 	<ThemeToggle />
 </header>
