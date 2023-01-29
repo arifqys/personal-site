@@ -56,3 +56,17 @@ const { title, description, image = '/placeholder-social.jpg' } = Astro.props;
   }
   window.localStorage.setItem("theme", theme);
 </script>
+
+<!-- Google Tag Manager -->
+<script
+  type="text/partytown"
+  src="https://www.googletagmanager.com/gtag/js?id=G-RG1957MC9R">
+</script>
+<script type="text/partytown">
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+  gtag("config", "G-RG1957MC9R");
+</script>

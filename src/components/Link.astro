@@ -1,11 +1,17 @@
 ---
-const { label, href, ...props } = Astro.props;
+const {
+  slot,
+  href,
+  icon,
+  customClass,
+  ...props
+} = Astro.props;
 ---
 
 <a
   href={href}
-  class="inline-flex justify-center items-center px-4 py-2 text-base font-semibold rounded-lg text-gray-900 bg-gray-100 hover:bg-gray-200 dark:text-gray-100 dark:bg-gray-800 dark:hover:bg-gray-900 dark:hover:text-white"
+  class:list={["inline-flex justify-center items-center px-4 py-2 text-base font-semibold rounded-lg text-gray-900 bg-gray-100 hover:bg-gray-200 dark:text-gray-100 dark:bg-gray-800 dark:hover:bg-gray-900 dark:hover:text-white", customClass]}
   {...props}
 >
-  <span class="w-full">{label}</span>
+  <span class="w-full flex gap-x-2 items-center"><slot /></span>
 </a>
